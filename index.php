@@ -1,6 +1,7 @@
 <?php
 require_once 'includes/db.php';
 require_once 'includes/header.php';
+// require_once 'includes/config.php';
 
 // fetch dashboard data
 try {
@@ -66,9 +67,9 @@ try {
                 <h6 class="m-0 font-weight-bold text-primary">quick actions</h6>
             </div>
             <div class="card-body">
-                <a href="modules/products.php" class="btn btn-primary">Manage Products</a>
-                <a href="modules/purchase.php" class="btn btn-warning text-dark">Purchase Inventory</a>
-                <a href="modules/sales.php" class="btn btn-info text-white">Sales Shipment</a>
+                <a href="<?= BASE_URL ?>modules/products.php" class="btn btn-primary">Manage Products</a>
+                <a href="<?= BASE_URL ?>modules/purchase.php" class="btn btn-warning text-dark">Purchase Inventory</a>
+                <a href="<?= BASE_URL ?>modules/sales.php" class="btn btn-info text-white">Sales Shipment</a>
             </div>
         </div>
     </div>
