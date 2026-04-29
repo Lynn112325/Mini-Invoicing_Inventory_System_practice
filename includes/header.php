@@ -43,7 +43,7 @@ if (!isset($_SESSION['user_id']) && basename($_SERVER['PHP_SELF']) != 'login.php
                 <h4 class="text-center mb-4">ERP System</h4>
                 <ul class="nav flex-column">
                     <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>index.php">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>modules/products.php">Product Management</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>modules/product/products.php">Product Management</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>modules/suppliers.php">Suppliers</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?= BASE_URL ?>modules/customers.php">Customer Data</a></li>
                     <hr class="bg-secondary">
