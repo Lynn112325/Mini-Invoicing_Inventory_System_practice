@@ -99,5 +99,14 @@ $current_order = $result['current_order'];
         </div>
     </div>
 </div>
-
+<?php
+if (isset($_SESSION['toast_success'])): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showToast("<?= $_SESSION['toast_success'] ?>");
+        });
+    </script>
+<?php
+    unset($_SESSION['toast_success']);
+endif; ?>
 <?php require_once '../../includes/footer.php'; ?>
