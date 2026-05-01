@@ -21,14 +21,15 @@ function getPaginatedData($pdo, $selectSql, $fromWhereSql, $searchColumns, $allo
     // Build the search query if search terms are provided
     if ($search && !empty($searchColumns)) {
         $searchConditions = [];
-        foreach ($searchColumns as $column) {
-            $searchConditions[] = "$column LIKE :search";
+        // Use indexed parameter names to avoid conflicts when multiple search columns are used
+        foreach ($searchColumns as $index => $column) {
+            $paramName = "search" . $index;
+            $searchConditions[] = "$column LIKE :$paramName";
+            $params[$paramName] = "%$search%";
         }
 
-        // Determine if we need to start with WHERE or add to existing WHERE via AND
         $connector = stripos($fromWhereSql, 'WHERE') !== false ? ' AND ' : ' WHERE ';
         $searchSql = $connector . "(" . implode(' OR ', $searchConditions) . ")";
-        $params['search'] = "%$search%";
     }
 
     // Query 1: Get the total number of records for pagination math
