@@ -23,8 +23,9 @@ function getPaginatedData($pdo, $selectSql, $fromWhereSql, $searchColumns, $allo
         $searchConditions = [];
         // Use indexed parameter names to avoid conflicts when multiple search columns are used
         foreach ($searchColumns as $index => $column) {
-            $paramName = "search" . $index;
-            $searchConditions[] = "$column LIKE :$paramName";
+            $paramName = ":search" . $index;
+            // $searchConditions: name LIKE :search0 OR email LIKE :search1
+            $searchConditions[] = "$column LIKE $paramName";
             $params[$paramName] = "%$search%";
         }
 
