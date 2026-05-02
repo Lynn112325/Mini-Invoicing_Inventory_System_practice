@@ -3,8 +3,15 @@
 /**
  * Handles database pagination, searching, and sorting
  */
-function getPaginatedData($pdo, $selectSql, $fromWhereSql, $searchColumns, $allowedSort, $defaultSort)
-{
+function getPaginatedData(
+    $pdo,             // PDO database connection
+    $selectSql,
+    $fromWhereSql,    // base FROM and WHERE clause without search conditions
+    $searchColumns,   // columns to apply search terms to
+    $allowedSort,
+    $defaultSort,
+    $extraParams = [] // filter parameters
+) {
     // Set pagination limits and calculate offset
     $limit = 10;
     $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -15,7 +22,7 @@ function getPaginatedData($pdo, $selectSql, $fromWhereSql, $searchColumns, $allo
     $order = isset($_GET['order']) && strtolower($_GET['order']) == 'asc' ? 'ASC' : 'DESC';
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-    $params = [];
+    $params = $extraParams;
     $searchSql = "";
 
     // Build the search query if search terms are provided
