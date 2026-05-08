@@ -11,11 +11,6 @@ class DashboardController
 
     public function index()
     {
-        // session_start();
-        if (!isset($_SESSION['user_id'])) {
-            header("Location: ?route=login");
-            exit;
-        }
 
         try {
             $stats = $this->model->getStats();

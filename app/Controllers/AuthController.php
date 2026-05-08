@@ -44,4 +44,14 @@ class AuthController
 
         require '../app/Views/auth/login.php';
     }
+
+    public function logout()
+    {
+        session_start();
+        session_unset();
+        session_destroy();
+
+        header("Location: ?route=login");
+        exit;
+    }
 }
