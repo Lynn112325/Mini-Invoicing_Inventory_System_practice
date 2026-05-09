@@ -24,7 +24,6 @@ class ProductController
 
         extract($result);
         $products = $data;
-        $searchTerm = $searchTerm;
         $categories = $this->productModel->getCategories();
 
         require '../app/Views/layout/header.php';
