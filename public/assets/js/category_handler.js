@@ -8,7 +8,7 @@ document.getElementById('saveCategoryBtn').addEventListener('click', function ()
         return;
     }
 
-    fetch(BASE_URL + 'modules/category/ajax_add_category.php', {
+    fetch('?route=category_add_ajax', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'name=' + encodeURIComponent(categoryName)
