@@ -1,5 +1,4 @@
 <?php
-require_once '../app/Models/User.php';
 class AuthController
 {
     private $userModel;

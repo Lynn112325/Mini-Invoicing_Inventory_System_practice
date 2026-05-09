@@ -1,9 +1,13 @@
 <?php
 require_once '../config/db.php';
+require_once '../app/Models/Category.php';
+require_once '../app/Models/Product.php';
+require_once '../app/Models/Dashboard.php';
+require_once '../app/Models/User.php';
 require_once '../app/Controllers/ProductController.php';
-require_once '../app/Controllers/UserController.php';
 require_once '../app/Controllers/AuthController.php';
 require_once '../app/Controllers/DashboardController.php';
+require_once '../app/Controllers/CategoryController.php';
 
 $route = $_GET['route'] ?? 'dashboard';
 $auth = new AuthController($pdo);
@@ -41,7 +45,12 @@ switch ($route) {
 
     case 'product_add':
         $controller = new ProductController($pdo);
-        // $controller->create();
+        $controller->create();
+        break;
+
+    case 'category_add_ajax':
+        $controller = new CategoryController($pdo);
+        $controller->storeAjax();
         break;
 
     default:
