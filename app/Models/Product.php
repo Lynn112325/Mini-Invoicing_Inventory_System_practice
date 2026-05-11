@@ -75,6 +75,13 @@ class Product
         ]);
     }
 
+    public function find($id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM products WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+
     public function validate($data, $productId = null)
     {
         $errors = [];

@@ -33,52 +33,66 @@ class ProductController
 
     public function create()
     {
+        $this->renderForm();
+    }
+
+    public function store()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $errors = $this->productModel->validate($_POST);
+
+            if (empty($errors)) {
+                $this->productModel->save($_POST);
+                $_SESSION['toast_success'] = "Product created successfully.";
+                header("Location: ?route=product_list");
+                exit;
+            }
+
+            $this->renderForm($_POST, $errors);
+        }
+    }
+
+    private function renderForm($product = [], $errors = [], $is_edit = false)
+    {
         $categories = $this->productModel->getCategories();
-        $product = [];
-        $errors = [];
+
+        $id = $_GET['id'] ?? '';
+        $formAction = $is_edit ? "?route=product_edit&id=$id" : "?route=product_add";
 
         require '../app/Views/layout/header.php';
-        require '../app/Views/product/create.php';
+        require '../app/Views/product/' . ($is_edit ? 'edit.php' : 'create.php');
         require '../app/Views/layout/footer.php';
     }
 
-    // public function edit()
-    // {
-    //     if (!isset($_GET['id'])) {
-    //         header("Location: ?route=product_list");
-    //         exit;
-    //     }
+    public function edit()
+    {
+        $id = $_GET['id'] ?? null;
+        if (!$id) {
+            header("Location: ?route=product_list");
+            exit;
+        }
 
-    //     $categories = $this->productModel->getCategories();
-    //     $product = $this->productModel->findById($_GET['id']);
-    //     if (!$product) {
-    //         header("Location: ?route=product_list");
-    //         exit;
-    //     }
-    //     $errors = [];
+        $product = $this->productModel->find($id);
+        if (!$product) {
+            die("Product not found.");
+        }
 
-    //     require '../app/Views/layout/header.php';
-    //     require '../app/Views/product/edit.php';
-    //     require '../app/Views/layout/footer.php';
-    // }
+        $this->renderForm($product, [], true);
+    }
 
-    // public function store()
-    // {
-    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //         $errors = $this->productModel->validate($_POST);
+    public function update()
+    {
+        $id = $_GET['id'] ?? null;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $id) {
+            $errors = $this->productModel->validate($_POST, $id);
 
-    //         if (empty($errors)) {
-    //             $this->productModel->save($_POST);
-    //             $_SESSION['toast_success'] = "product is created successfully.";
-    //             header("Location: ?route=product_list");
-    //             exit;
-    //         }
-
-    //         $categories = $this->productModel->getCategories();
-    //         $product = $_POST;
-    //         require '../app/Views/layout/header.php';
-    //         require '../app/Views/product/create.php';
-    //         require '../app/Views/layout/footer.php';
-    //     }
-    // }
+            if (empty($errors)) {
+                $this->productModel->update($id, $_POST);
+                $_SESSION['toast_success'] = "Product updated successfully!";
+                header("Location: ?route=product_list");
+                exit;
+            }
+            $this->renderForm($_POST, $errors, true);
+        }
+    }
 }

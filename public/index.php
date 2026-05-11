@@ -10,6 +10,7 @@ require_once '../app/Controllers/DashboardController.php';
 require_once '../app/Controllers/CategoryController.php';
 
 $route = $_GET['route'] ?? 'dashboard';
+$method = $_SERVER['REQUEST_METHOD'];
 $auth = new AuthController($pdo);
 
 session_start();
@@ -45,7 +46,20 @@ switch ($route) {
 
     case 'product_add':
         $controller = new ProductController($pdo);
-        $controller->create();
+        if ($method === 'POST') {
+            $controller->store();
+        } else {
+            $controller->create();
+        }
+        break;
+
+    case 'product_edit':
+        $controller = new ProductController($pdo);
+        if ($method === 'POST') {
+            $controller->update();
+        } else {
+            $controller->edit();
+        }
         break;
 
     case 'category_add_ajax':
