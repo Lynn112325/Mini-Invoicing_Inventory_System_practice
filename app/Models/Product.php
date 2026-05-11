@@ -82,6 +82,16 @@ class Product
         if (empty(trim($data['sku']))) $errors['sku'] = "SKU is required.";
         if (empty(trim($data['name']))) $errors['name'] = "Product is required.";
 
+        if (empty($data['category_id'])) {
+            $errors['category_id'] = "Category is required.";
+        } else {
+            $stmt = $this->db->prepare("SELECT id FROM categories WHERE id = ?");
+            $stmt->execute([$data['category_id']]);
+            if (!$stmt->fetch()) {
+                $errors['category_id'] = "Selected category does not exist.";
+            }
+        }
+
         if (!is_numeric($data['stock_quantity']) || $data['stock_quantity'] < 0) {
             $errors['stock_quantity'] = "Stock quantity must be a positive integer.";
         }
