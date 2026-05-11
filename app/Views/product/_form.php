@@ -12,20 +12,20 @@ function displayError($field, $errors)
     }
 }
 ?>
-<form method="POST">
+<form method="POST" action="<?= $formAction ?>">
     <div class="row">
         <div class="col-md-6 mb-3">
             <label class="form-label">SKU (Stock Keeping Unit)</label>
             <input type="text" name="sku"
                 class="form-control <?= setErrorClass('sku', $errors) ?>"
-                value="<?= htmlspecialchars(html_entity_decode($product['sku'] ?? '')) ?>">
+                value="<?= htmlspecialchars($product['sku'] ?? '') ?>">
             <?php displayError('sku', $errors); ?>
         </div>
         <div class="col-md-6 mb-3">
             <label class="form-label">Product Name</label>
             <input type="text" name="name"
                 class="form-control <?= setErrorClass('name', $errors) ?>"
-                value="<?= htmlspecialchars(html_entity_decode($product['name'] ?? '')) ?>">
+                value="<?= htmlspecialchars($product['name'] ?? '') ?>">
             <?php displayError('name', $errors); ?>
         </div>
     </div>
@@ -39,7 +39,7 @@ function displayError($field, $errors)
                 <?php foreach ($categories as $cat): ?>
                     <option value="<?= $cat['id'] ?>"
                         <?= (isset($product['category_id']) && $product['category_id'] == $cat['id']) ? 'selected' : '' ?>>
-                        <?= htmlspecialchars(html_entity_decode($cat['name'])) ?>
+                        <?= htmlspecialchars($cat['name']) ?>
                     </option>
                 <?php endforeach; ?>
             </select>
@@ -54,14 +54,14 @@ function displayError($field, $errors)
             <label class="form-label">Initial Stock</label>
             <input type="number" name="stock_quantity" step="1" min="0"
                 class="form-control <?= setErrorClass('stock_quantity', $errors) ?>"
-                value="<?= htmlspecialchars(html_entity_decode($product['stock_quantity'] ?? '0')) ?>">
+                value="<?= htmlspecialchars($product['stock_quantity'] ?? '0') ?>">
             <?php displayError('stock_quantity', $errors); ?>
         </div>
         <div class="col-md-6 mb-3">
             <label class="form-label">Unit Price ($)</label>
             <input type="number" name="unit_price" step="0.01" min="0"
                 class="form-control <?= setErrorClass('unit_price', $errors) ?>"
-                value="<?= htmlspecialchars(html_entity_decode($product['unit_price'] ?? '0.00')) ?>">
+                value="<?= htmlspecialchars($product['unit_price'] ?? '0.00') ?>">
             <?php displayError('unit_price', $errors); ?>
         </div>
     </div>
