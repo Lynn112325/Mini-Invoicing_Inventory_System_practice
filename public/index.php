@@ -1,5 +1,6 @@
 <?php
 require_once '../config/db.php';
+require_once '../app/Models/Partner/BasePartner.php';
 require_once '../app/Models/Category.php';
 require_once '../app/Models/Product.php';
 require_once '../app/Models/Dashboard.php';
@@ -8,6 +9,8 @@ require_once '../app/Controllers/ProductController.php';
 require_once '../app/Controllers/AuthController.php';
 require_once '../app/Controllers/DashboardController.php';
 require_once '../app/Controllers/CategoryController.php';
+require_once '../app/Controllers/CustomerController.php';
+require_once '../app/Models/Partner/Customer.php';
 
 $route = $_GET['route'] ?? 'dashboard';
 $method = $_SERVER['REQUEST_METHOD'];
@@ -38,7 +41,7 @@ switch ($route) {
         $controller = new DashboardController($pdo);
         $controller->index();
         break;
-
+    // Product routes
     case 'product_list':
         $controller = new ProductController($pdo);
         $controller->index();
@@ -65,6 +68,11 @@ switch ($route) {
     case 'category_add_ajax':
         $controller = new CategoryController($pdo);
         $controller->storeAjax();
+        break;
+    // Customer routes
+    case 'customer_list':
+        $controller = new CustomerController($pdo);
+        $controller->index();
         break;
 
     default:
