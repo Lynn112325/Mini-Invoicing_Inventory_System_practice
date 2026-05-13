@@ -45,7 +45,7 @@ class Product
         $allowedSort = ['sku', 'name', 'category_name', 'stock_quantity', 'unit_price', 'p.id'];
 
         require_once '../config/functions/pagination_helper.php';
-        return getPaginatedData($this->db, $selectSql, $fromWhereSql, $searchColumns, $allowedSort, 'p.id', $params);
+        return getPaginatedData($this->db, $selectSql, $fromWhereSql, $searchColumns, $allowedSort, 'p.id', 'ASC', $params);
     }
 
     public function save($data)
