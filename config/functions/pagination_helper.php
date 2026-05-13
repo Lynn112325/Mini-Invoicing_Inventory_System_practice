@@ -10,6 +10,7 @@ function getPaginatedData(
     $searchColumns,   // columns to apply search terms to
     $allowedSort,
     $defaultSort,
+    $defaultOrder = 'ASC',
     $extraParams = [] // filter parameters
 ) {
     // Set pagination limits and calculate offset
@@ -19,8 +20,10 @@ function getPaginatedData(
 
     // Validate sorting parameters against allowed list
     $sort = isset($_GET['sort']) && in_array($_GET['sort'], $allowedSort) ? $_GET['sort'] : $defaultSort;
-    $order = isset($_GET['order']) && strtolower($_GET['order']) == 'asc' ? 'ASC' : 'DESC';
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+    $order = isset($_GET['order']) && in_array(strtolower($_GET['order']), ['asc', 'desc'])
+        ? strtoupper($_GET['order'])
+        : $defaultOrder;
 
     $params = $extraParams;
     $searchSql = "";
