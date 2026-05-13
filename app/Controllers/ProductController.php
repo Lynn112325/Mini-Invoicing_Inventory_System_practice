@@ -19,7 +19,7 @@ class ProductController
         $searchTerm = htmlspecialchars($_GET['search'] ?? '');
         $result = $this->productModel->getPaginated($_GET);
 
-        // print_r(array_keys($result));
+        // print_r($result);
         // die();
 
         extract($result);
