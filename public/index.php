@@ -1,22 +1,31 @@
 <?php
 require_once '../config/db.php';
-require_once '../app/Models/Partner/BasePartner.php';
-require_once '../app/Models/Category.php';
-require_once '../app/Models/Product.php';
-require_once '../app/Models/Dashboard.php';
-require_once '../app/Models/User.php';
-require_once '../app/Controllers/ProductController.php';
-require_once '../app/Controllers/AuthController.php';
-require_once '../app/Controllers/DashboardController.php';
-require_once '../app/Controllers/CategoryController.php';
-require_once '../app/Controllers/CustomerController.php';
-require_once '../app/Models/Partner/Customer.php';
+
+// Autoloader function to load classes from Controllers and Models directories
+spl_autoload_register(function ($className) {
+    // define possible directories to look for class files
+    $dirs = [
+        '../app/Controllers/',
+        '../app/Models/',
+        '../app/Models/Partner/',
+    ];
+
+    foreach ($dirs as $dir) {
+        $file = $dir . $className . '.php';
+        if (file_exists($file)) {
+            require_once $file;
+            return; // stop after loading the class
+        }
+    }
+});
+
+session_start();
 
 $route = $_GET['route'] ?? 'dashboard';
 $method = $_SERVER['REQUEST_METHOD'];
+
 $auth = new AuthController($pdo);
 
-session_start();
 $publicRoutes = ['login', 'login_process'];
 
 if (!isset($_SESSION['user_id']) && !in_array($route, $publicRoutes)) {
@@ -78,6 +87,11 @@ switch ($route) {
     case 'customer_list':
         $controller = new CustomerController($pdo);
         $controller->index();
+        break;
+
+    case 'customer_delete':
+        $controller = new CustomerController($pdo);
+        $controller->delete();
         break;
 
     default:
