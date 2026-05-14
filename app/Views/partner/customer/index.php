@@ -25,9 +25,9 @@
                     </div>
                 </div>
 
-                <div class="row g-2">
+                <div class="row g-2 align-items-end">
                     <!-- Specific Filter: Customer Level -->
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <label class="form-label mb-1 fw-bold" style="font-size: 0.75rem;">CUSTOMER LEVEL</label>
                         <select name="level" class="form-select form-select-sm">
                             <option value="">All Levels</option>
@@ -35,6 +35,20 @@
                             <option value="vip" <?= ($_GET['level'] ?? '') == 'vip' ? 'selected' : '' ?>>VIP</option>
                             <option value="vvep" <?= ($_GET['level'] ?? '') == 'vvep' ? 'selected' : '' ?>>VVEP</option>
                         </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label mb-1 fw-bold" style="font-size: 0.75rem;">CREDIT RANGE</label>
+                        <div class="input-group input-group-sm">
+                            <input type="number" name="c_min" class="form-control" placeholder="Min" value="<?= htmlspecialchars($_GET['c_min'] ?? '') ?>">
+                            <span class="input-group-text border-start-0 border-end-0 bg-transparent">-</span>
+                            <input type="number" name="c_max" class="form-control" placeholder="Max" value="<?= htmlspecialchars($_GET['c_max'] ?? '') ?>">
+                        </div>
+                    </div>
+                    <!-- Reset Link -->
+                    <div class="col-md-1 text-center">
+                        <a href="?route=customer_list" class="btn btn-sm btn-link text-decoration-none text-danger p-0 mb-1">
+                            <i class="bi bi-x-circle me-1"></i>Reset
+                        </a>
                     </div>
                 </div>
             </form>

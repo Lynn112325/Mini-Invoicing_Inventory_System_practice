@@ -14,8 +14,8 @@ class CustomerController
         $filters = [
             'search' => $_GET['search'] ?? '',
             'customer_level'  => $_GET['level'] ?? '',
-            'credit_min' => $_GET['credit_min'] ?? '',
-            'credit_max' => $_GET['credit_max'] ?? '',
+            'credit_min' => $_GET['c_min'] ?? '',
+            'credit_max' => $_GET['c_max'] ?? '',
         ];
 
         $result = $this->customerModel->getPaginated($filters);
