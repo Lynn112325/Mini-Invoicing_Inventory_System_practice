@@ -14,25 +14,23 @@ abstract class BasePartner
      * Get paginated list of partners with joined child data and dynamic filters
      * Child controllers will call this method, passing in their specific SQL parts and filter configs.
      */
-    protected function getPaginatedPartners($selectSql, $fromWhereSql, $extraSearchColumns = [], $extraFiltersConfig = [], $allowedSort = [])
+    protected function getPaginatedPartners($selectSql, $fromWhereSql, $filters, $extraSearchColumns = [], $extraFiltersConfig = [], $allowedSort = [])
     {
         $conditions = ["p.deleted_at IS NULL"];
 
-        $filtersConfig = [
-            'type' => ['col' => 'p.type', 'type' => 'string'],
-        ];
+        $filtersConfig = [];
 
         // Merge with child-specific filters defined in the controller
         $filtersConfig = array_merge($filtersConfig, $extraFiltersConfig);
         $params = [];
         foreach ($filtersConfig as $key => $val) {
-            if (isset($_GET[$key]) && $_GET[$key] !== '') {
+            if (isset($filters[$key]) && $filters[$key] !== '') {
                 $op = $val['op'] ?? '=';
                 $paramName = "filter_" . $key;
                 $conditions[] = "{$val['col']} {$op} :{$paramName}";
-                if ($val['type'] === 'int') $params[$paramName] = (int)$_GET[$key];
-                elseif ($val['type'] === 'float') $params[$paramName] = (float)$_GET[$key];
-                else $params[$paramName] = $_GET[$key];
+                if ($val['type'] === 'int') $params[$paramName] = (int)$filters[$key];
+                elseif ($val['type'] === 'float') $params[$paramName] = (float)$filters[$key];
+                else $params[$paramName] = $filters[$key];
             }
         }
 

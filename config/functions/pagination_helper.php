@@ -11,7 +11,7 @@ function getPaginatedData(
     $allowedSort,
     $defaultSort,
     $defaultOrder = 'ASC',
-    $extraParams = [] // filter parameters
+    $params = [] // filter parameters
 ) {
     // Set pagination limits and calculate offset
     $limit = 10;
@@ -25,7 +25,6 @@ function getPaginatedData(
         ? strtoupper($_GET['order'])
         : $defaultOrder;
 
-    $params = $extraParams;
     $searchSql = "";
 
     // Build the search query if search terms are provided
@@ -52,6 +51,10 @@ function getPaginatedData(
 
     // Query 2: Get the actual rows for the current page
     $dataQuery = "$selectSql $fromWhereSql $searchSql ORDER BY $sort $order LIMIT $limit OFFSET $offset";
+    // print_r($dataQuery);
+    // print_r($params);
+    // die();
+
     $stmt = $pdo->prepare($dataQuery);
     $stmt->execute($params);
     $data = $stmt->fetchAll();

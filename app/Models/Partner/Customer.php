@@ -6,7 +6,7 @@ class Customer extends BasePartner
 
     public function getPaginated($filters)
     {
-        $extraFilters = [
+        $extraFiltersConfig = [
             'customer_level' => ['col' => 'c.customer_level', 'type' => 'string'],
             'credit_min' => ['col' => 'c.credit_limit',   'op' => '>=', 'type' => 'float'],
             'credit_max' => ['col' => 'c.credit_limit',   'op' => '<=', 'type' => 'float'],
@@ -17,7 +17,7 @@ class Customer extends BasePartner
 
         $allowedSort = ['p.name', 'p.email', 'c.customer_level', 'c.credit_limit', 'p.created_at'];
 
-        return $this->getPaginatedPartners($selectSql, $fromWhereSql, [], $extraFilters, $allowedSort);
+        return $this->getPaginatedPartners($selectSql, $fromWhereSql, $filters, [], $extraFiltersConfig, $allowedSort);
     }
 
     public function create($data)
