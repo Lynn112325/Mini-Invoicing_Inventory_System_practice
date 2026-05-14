@@ -10,12 +10,6 @@ class ProductController
 
     public function index()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
-            $this->productModel->softDelete($_POST['delete_id']);
-            $_SESSION['toast_success'] = "Product deleted successfully.";
-            header("Location: ?route=product_list");
-            exit;
-        }
         $searchTerm = htmlspecialchars($_GET['search'] ?? '');
         $filters = [
             'cat'   => $_GET['cat'] ?? '',
@@ -47,6 +41,16 @@ class ProductController
     public function create()
     {
         $this->renderForm();
+    }
+
+    public function delete()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
+            $this->productModel->softDelete($_POST['delete_id']);
+            $_SESSION['toast_success'] = "Product deleted successfully.";
+        }
+        header("Location: ?route=product_list");
+        exit;
     }
 
     public function store()

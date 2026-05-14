@@ -95,7 +95,7 @@
                                 <td>
                                     <a href="?route=product_edit&id=<?= $product['id'] ?>" class="btn btn-sm btn-outline-info">Edit</a>
 
-                                    <form action="?route=product_list" method="POST" style="display:inline;"
+                                    <form action="?route=product_delete" method="POST" style="display:inline;"
                                         onsubmit="return confirm('Are you sure you want to delete this product?');">
                                         <input type="hidden" name="delete_id" value="<?= $product['id'] ?>">
                                         <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
