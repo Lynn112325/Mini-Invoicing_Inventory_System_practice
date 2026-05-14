@@ -9,22 +9,23 @@ function getPaginatedData(
     $fromWhereSql,    // base FROM and WHERE clause without search conditions
     $searchColumns,   // columns to apply search terms to
     $allowedSort,
-    $defaultSort,
-    $defaultOrder = 'ASC',
+    $paginationParams, // ['page' => 1, 'sort' => 'id', 'order' => 'ASC']
+    $search = '',
     $params = [] // filter parameters
 ) {
+
     // Set pagination limits and calculate offset
     $limit = 10;
-    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : $paginationParams['page'] ?? 1;
     $offset = ($page - 1) * $limit;
 
     // Validate sorting parameters against allowed list
-    $sort = isset($_GET['sort']) && array_key_exists($_GET['sort'], $allowedSort) ? $_GET['sort'] : $defaultSort;
+    $page = $paginationParams['page'] ?? 1;
+    $keys = array_keys($allowedSort);
+    $fallback = $keys[0];
+    $sort = array_key_exists($paginationParams['sort'], $allowedSort) ? $paginationParams['sort'] : $fallback;
+    $order = $paginationParams['order'] ?? 'ASC';
     $actualSort = $allowedSort[$sort];
-    $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-    $order = isset($_GET['order']) && in_array(strtolower($_GET['order']), ['asc', 'desc'])
-        ? strtoupper($_GET['order'])
-        : $defaultOrder;
 
     $searchSql = "";
 

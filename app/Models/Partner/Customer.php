@@ -11,7 +11,7 @@ class Customer extends BasePartner
         'date'   => 'p.created_at'
     ];
 
-    public function getPaginated($filters)
+    public function getPaginated($search, $filters, $paginationParams)
     {
         $extraFiltersConfig = [
             'customer_level' => ['col' => 'c.customer_level', 'type' => 'string'],
@@ -24,7 +24,7 @@ class Customer extends BasePartner
 
         $allowedSort = $this->sortMapping;
 
-        return $this->getPaginatedPartners($selectSql, $fromWhereSql, $filters, [], $extraFiltersConfig, $allowedSort);
+        return $this->getPaginatedPartners($selectSql, $fromWhereSql, $filters, $search, $paginationParams, [], $extraFiltersConfig, $allowedSort);
     }
 
     public function create($data)
