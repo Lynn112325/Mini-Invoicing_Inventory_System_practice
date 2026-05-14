@@ -47,6 +47,11 @@ switch ($route) {
         $controller->index();
         break;
 
+    case 'product_delete':
+        $controller = new ProductController($pdo);
+        $controller->delete();
+        break;
+
     case 'product_add':
         $controller = new ProductController($pdo);
         if ($method === 'POST') {
