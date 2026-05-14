@@ -14,7 +14,7 @@ abstract class BasePartner
      * Get paginated list of partners with joined child data and dynamic filters
      * Child controllers will call this method, passing in their specific SQL parts and filter configs.
      */
-    protected function getPaginatedPartners($selectSql, $fromWhereSql, $extraFiltersConfig, $allowedSort, $params = [])
+    protected function getPaginatedPartners($selectSql, $fromWhereSql, $extraSearchColumns = [], $extraFiltersConfig = [], $allowedSort = [])
     {
         $conditions = ["p.deleted_at IS NULL"];
 
@@ -24,7 +24,7 @@ abstract class BasePartner
 
         // Merge with child-specific filters defined in the controller
         $filtersConfig = array_merge($filtersConfig, $extraFiltersConfig);
-
+        $params = [];
         foreach ($filtersConfig as $key => $val) {
             if (isset($_GET[$key]) && $_GET[$key] !== '') {
                 $op = $val['op'] ?? '=';
@@ -38,7 +38,7 @@ abstract class BasePartner
 
         $fullFromWhere = $fromWhereSql . " WHERE " . implode(" AND ", $conditions);
 
-        $searchColumns = ['p.name', 'p.email', 'p.phone', 'p.address']; // Allow searching by partner and child fields
+        $searchColumns = array_merge(['p.name', 'p.email', 'p.phone', 'p.address'], $extraSearchColumns); // Allow searching by partner and child fields
 
         require_once '../config/functions/pagination_helper.php';
         return getPaginatedData($this->db, $selectSql, $fullFromWhere, $searchColumns, $allowedSort, 'p.id', 'ASC', $params);

@@ -11,23 +11,13 @@ class Customer extends BasePartner
             'credit_min' => ['col' => 'c.credit_limit',   'op' => '>=', 'type' => 'float'],
             'credit_max' => ['col' => 'c.credit_limit',   'op' => '<=', 'type' => 'float'],
         ];
-        $conditions = [];
-        $params = [];
-        foreach ($filters as $key => $val) {
-            if (isset($_GET[$key]) && $_GET[$key] !== '') {
-                $op = $val['op'] ?? '=';
-                $paramName = "filter_" . $key;
-                $conditions[] = "{$val['col']} {$op} :{$paramName}";
-                $params[$paramName] = ($val['type'] === 'int') ? (int)$_GET[$key] : (float)$_GET[$key];
-            }
-        }
 
         $selectSql = "SELECT p.*, c.credit_limit, c.customer_level";
         $fromWhereSql = "FROM partners p INNER JOIN customers c ON p.id = c.partner_id";
 
         $allowedSort = ['p.name', 'p.email', 'c.customer_level', 'c.credit_limit', 'p.created_at'];
 
-        return $this->getPaginatedPartners($selectSql, $fromWhereSql, $extraFilters, $allowedSort, $params);
+        return $this->getPaginatedPartners($selectSql, $fromWhereSql, [], $extraFilters, $allowedSort);
     }
 
     public function create($data)
