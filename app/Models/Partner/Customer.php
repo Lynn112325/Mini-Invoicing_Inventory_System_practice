@@ -5,7 +5,6 @@ class Customer extends BasePartner
     protected $childFields = ['credit_limit', 'customer_level'];
     protected $sortMapping = [
         'name'   => 'p.name',
-        'email'  => 'p.email',
         'level'  => 'c.customer_level',
         'credit' => 'c.credit_limit',
         'date'   => 'p.created_at'

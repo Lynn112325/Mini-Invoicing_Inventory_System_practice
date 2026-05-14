@@ -62,9 +62,9 @@
                     <tr>
                         <?= renderSortHeader('Name', 'name', $current_sort, $current_order); ?>
                         <th>Contact Info</th>
-                        <th>Level</th>
-                        <th>Credit Limit</th>
-                        <th>Created At</th>
+                        <?= renderSortHeader('Customer Level', 'level', $current_sort, $current_order); ?>
+                        <?= renderSortHeader('Credit Limit', 'credit', $current_sort, $current_order); ?>
+                        <?= renderSortHeader('Created At', 'date', $current_sort, $current_order); ?>
                         <th>Actions</th>
                     </tr>
                 </thead>
