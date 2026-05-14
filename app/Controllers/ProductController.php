@@ -17,7 +17,20 @@ class ProductController
             exit;
         }
         $searchTerm = htmlspecialchars($_GET['search'] ?? '');
-        $result = $this->productModel->getPaginated($_GET);
+        $filters = [
+            'cat'   => $_GET['cat'] ?? '',
+            's_min' => $_GET['s_min'] ?? '',
+            's_max' => $_GET['s_max'] ?? '',
+            'p_min' => $_GET['p_min'] ?? '',
+            'p_max' => $_GET['p_max'] ?? '',
+        ];
+        $paginationParams = [
+            'page'  => (int)($_GET['page'] ?? 1),
+            'sort'  => $_GET['sort'] ?? 'name',
+            'order' => strtolower($_GET['order'] ?? 'asc'),
+        ];
+
+        $result = $this->productModel->getPaginated($searchTerm, $filters, $paginationParams);
 
         // print_r($result);
         // die();

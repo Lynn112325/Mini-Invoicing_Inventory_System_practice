@@ -18,11 +18,11 @@ class Product
         return $stmt->execute([$id]);
     }
 
-    public function getPaginated($filters)
+    public function getPaginated($searchTerm, $filters, $paginationParams)
     {
         $conditions = ["p.deleted_at IS NULL"];
         $params = [];
-        $filters = [
+        $filtersConfig = [
             'cat'   => ['col' => 'p.category_id',    'type' => 'int'],
             's_min' => ['col' => 'p.stock_quantity', 'op' => '>=', 'type' => 'int'],
             's_max' => ['col' => 'p.stock_quantity', 'op' => '<=', 'type' => 'int'],
@@ -30,12 +30,12 @@ class Product
             'p_max' => ['col' => 'p.unit_price',     'op' => '<=', 'type' => 'float'],
         ];
 
-        foreach ($filters as $key => $val) {
-            if (isset($_GET[$key]) && $_GET[$key] !== '') {
+        foreach ($filtersConfig as $key => $val) {
+            if (isset($filters[$key]) && $filters[$key] !== '') {
                 $op = $val['op'] ?? '=';
                 $paramName = "filter_" . $key;
                 $conditions[] = "{$val['col']} {$op} :{$paramName}";
-                $params[$paramName] = ($val['type'] === 'int') ? (int)$_GET[$key] : (float)$_GET[$key];
+                $params[$paramName] = ($val['type'] === 'int') ? (int)$filters[$key] : (float)$filters[$key];
             }
         }
 
@@ -45,7 +45,7 @@ class Product
         $allowedSort = ['sku', 'name', 'category_name', 'stock_quantity', 'unit_price', 'p.id'];
 
         require_once '../config/functions/pagination_helper.php';
-        return getPaginatedData($this->db, $selectSql, $fromWhereSql, $searchColumns, $allowedSort, 'p.id', 'ASC', $params);
+        return getPaginatedData($this->db, $selectSql, $fromWhereSql, $searchColumns, $allowedSort, $paginationParams, $searchTerm, $params);
     }
 
     public function save($data)

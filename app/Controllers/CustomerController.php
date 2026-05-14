@@ -12,16 +12,15 @@ class CustomerController
     {
         $order = isset($_GET['order']) && strtolower($_GET['order']) == 'asc' ? 'ASC' : 'DESC';
         $filters = [
-
             'customer_level'  => $_GET['level'] ?? '',
             'credit_min' => $_GET['c_min'] ?? '',
             'credit_max' => $_GET['c_max'] ?? '',
         ];
         $search = $_GET['search'] ?? '';
         $paginationParams = [
-            'page'  => $_GET['page'] ?? 1,
+            'page'  => (int)($_GET['page'] ?? 1),
             'sort'  => $_GET['sort'] ?? 'name',
-            'order' => $_GET['order'] ?? 'ASC',
+            'order' => strtolower($_GET['order'] ?? 'asc'),
         ];
 
         $result = $this->customerModel->getPaginated($search, $filters, $paginationParams);
