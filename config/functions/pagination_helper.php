@@ -16,15 +16,14 @@ function getPaginatedData(
 
     // Set pagination limits and calculate offset
     $limit = 10;
-    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : $paginationParams['page'] ?? 1;
+    $page = (int)($paginationParams['page'] ?? 1);
     $offset = ($page - 1) * $limit;
 
     // Validate sorting parameters against allowed list
-    $page = $paginationParams['page'] ?? 1;
     $keys = array_keys($allowedSort);
     $fallback = $keys[0];
     $sort = array_key_exists($paginationParams['sort'], $allowedSort) ? $paginationParams['sort'] : $fallback;
-    $order = $paginationParams['order'] ?? 'ASC';
+    $order = strtolower($paginationParams['order'] ?? 'asc');
     $actualSort = $allowedSort[$sort];
 
     $searchSql = "";
@@ -78,7 +77,7 @@ function getPaginatedData(
 function getSortURL($column, $current_sort, $current_order)
 {
     // Switch direction if the same column is clicked again
-    $new_order = ($column == $current_sort && $current_order == 'ASC') ? 'desc' : 'asc';
+    $new_order = (strtolower($column) == strtolower($current_sort) && strtolower($current_order) == 'asc') ? 'desc' : 'asc';
     $params = $_GET;
     $params['sort'] = $column;
     $params['order'] = $new_order;
@@ -120,7 +119,7 @@ function renderSortHeader($label, $column, $currentSort, $currentOrder)
     $url = getSortURL($column, $currentSort, $currentOrder);
     $icon = '';
     if ($column == $currentSort) {
-        $icon = ($currentOrder == 'ASC') ? ' ↑' : ' ↓';
+        $icon = (strtolower($currentOrder) == 'asc') ? ' ↑' : ' ↓';
     } else {
         $icon = ' ↕';
     }
