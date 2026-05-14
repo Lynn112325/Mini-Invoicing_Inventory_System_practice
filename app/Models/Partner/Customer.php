@@ -57,4 +57,9 @@ class Customer extends BasePartner
             return true;
         });
     }
+
+    public function softDelete($id)
+    {
+        $this->delete($id);
+    }
 }

@@ -88,7 +88,10 @@
                             <td><?= date('Y-m-d', strtotime($c['created_at'])) ?></td>
                             <td>
                                 <a href="?route=customer_edit&id=<?= $c['id'] ?>" class="btn btn-sm btn-outline-info">Edit</a>
-                                <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                <form action="?route=customer_delete" method="POST" style="display:inline;">
+                                    <input type="hidden" name="delete_id" value="<?= $c['id'] ?>">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this customer?');">Delete</button>
+                                </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -102,3 +105,13 @@
         </div>
     </div>
 </div>
+<?php
+if (isset($_SESSION['toast_success'])): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showToast("<?= $_SESSION['toast_success'] ?>");
+        });
+    </script>
+<?php
+    unset($_SESSION['toast_success']);
+endif; ?>

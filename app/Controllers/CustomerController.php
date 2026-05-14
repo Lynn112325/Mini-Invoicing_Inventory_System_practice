@@ -33,4 +33,14 @@ class CustomerController
         require '../app/Views/partner/customer/index.php';
         require '../app/Views/layout/footer.php';
     }
+
+    public function delete()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
+            $this->customerModel->softDelete($_POST['delete_id']);
+            $_SESSION['toast_success'] = "Customer deleted successfully.";
+        }
+        header("Location: ?route=customer_list");
+        exit;
+    }
 }
