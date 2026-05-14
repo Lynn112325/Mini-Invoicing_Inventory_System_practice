@@ -61,7 +61,7 @@
             <table class="table table-hover">
                 <thead class="table-light">
                     <tr>
-                        <th>Name</th>
+                        <?= renderSortHeader('Name', 'name', $current_sort, $current_order); ?>
                         <th>Contact Info</th>
                         <th>Level</th>
                         <th>Credit Limit</th>
@@ -95,6 +95,11 @@
                     <?php endforeach; ?>
                 </tbody>
             </table>
+            <?= renderPagination($total_pages, $current_page) ?>
+
+            <div class="text-muted small">
+                Showing <?= count($customers) ?> of <?= $result['total_results'] ?> customers
+            </div>
         </div>
     </div>
 </div>

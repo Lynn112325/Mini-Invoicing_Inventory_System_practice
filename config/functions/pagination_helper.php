@@ -19,7 +19,8 @@ function getPaginatedData(
     $offset = ($page - 1) * $limit;
 
     // Validate sorting parameters against allowed list
-    $sort = isset($_GET['sort']) && in_array($_GET['sort'], $allowedSort) ? $_GET['sort'] : $defaultSort;
+    $sort = isset($_GET['sort']) && array_key_exists($_GET['sort'], $allowedSort) ? $_GET['sort'] : $defaultSort;
+    $actualSort = $allowedSort[$sort];
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';
     $order = isset($_GET['order']) && in_array(strtolower($_GET['order']), ['asc', 'desc'])
         ? strtoupper($_GET['order'])
@@ -50,7 +51,7 @@ function getPaginatedData(
     $totalPages = ceil($totalResults / $limit);
 
     // Query 2: Get the actual rows for the current page
-    $dataQuery = "$selectSql $fromWhereSql $searchSql ORDER BY $sort $order LIMIT $limit OFFSET $offset";
+    $dataQuery = "$selectSql $fromWhereSql $searchSql ORDER BY $actualSort $order LIMIT $limit OFFSET $offset";
     // print_r($dataQuery);
     // print_r($params);
     // die();

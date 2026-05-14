@@ -3,6 +3,13 @@ class Customer extends BasePartner
 {
     protected $table = 'customers';
     protected $childFields = ['credit_limit', 'customer_level'];
+    protected $sortMapping = [
+        'name'   => 'p.name',
+        'email'  => 'p.email',
+        'level'  => 'c.customer_level',
+        'credit' => 'c.credit_limit',
+        'date'   => 'p.created_at'
+    ];
 
     public function getPaginated($filters)
     {
@@ -15,7 +22,7 @@ class Customer extends BasePartner
         $selectSql = "SELECT p.*, c.credit_limit, c.customer_level";
         $fromWhereSql = "FROM partners p INNER JOIN customers c ON p.id = c.partner_id";
 
-        $allowedSort = ['p.name', 'p.email', 'c.customer_level', 'c.credit_limit', 'p.created_at'];
+        $allowedSort = $this->sortMapping;
 
         return $this->getPaginatedPartners($selectSql, $fromWhereSql, $filters, [], $extraFiltersConfig, $allowedSort);
     }
