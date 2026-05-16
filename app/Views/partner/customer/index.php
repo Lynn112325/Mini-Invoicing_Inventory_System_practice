@@ -57,46 +57,73 @@
     <!-- Data Table -->
     <div class="card shadow-sm">
         <div class="card-body">
-            <table class="table table-hover">
-                <thead class="table-light">
-                    <tr>
-                        <?= renderSortHeader('Name', 'name', $current_sort, $current_order); ?>
-                        <th>Contact Info</th>
-                        <?= renderSortHeader('Customer Level', 'level', $current_sort, $current_order); ?>
-                        <?= renderSortHeader('Credit Limit', 'credit', $current_sort, $current_order); ?>
-                        <?= renderSortHeader('Created At', 'date', $current_sort, $current_order); ?>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($customers as $c): ?>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
                         <tr>
-                            <td>
-                                <div class="fw-bold text-primary"><?= htmlspecialchars($c['name']) ?></div>
-                                <small class="text-muted">ID: #<?= $c['id'] ?></small>
-                            </td>
-                            <td>
-                                <div><i class="bi bi-envelope me-1"></i><?= htmlspecialchars($c['email']) ?></div>
-                                <div><i class="bi bi-telephone me-1"></i><?= htmlspecialchars($c['phone']) ?></div>
-                            </td>
-                            <td>
-                                <span class="badge bg-<?= $c['customer_level'] == 'vip' ? 'warning' : 'secondary' ?>">
-                                    <?= strtoupper($c['customer_level']) ?>
-                                </span>
-                            </td>
-                            <td>$<?= number_format($c['credit_limit'], 2) ?></td>
-                            <td><?= date('Y-m-d', strtotime($c['created_at'])) ?></td>
-                            <td>
-                                <a href="?route=customer_edit&id=<?= $c['id'] ?>" class="btn btn-sm btn-outline-info">Edit</a>
-                                <form action="?route=customer_delete" method="POST" style="display:inline;">
-                                    <input type="hidden" name="delete_id" value="<?= $c['id'] ?>">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this customer?');">Delete</button>
-                                </form>
-                            </td>
+                            <?= renderSortHeader('Name', 'name', $current_sort, $current_order); ?>
+                            <th>Contact Info</th>
+                            <?= renderSortHeader('Customer Level', 'level', $current_sort, $current_order); ?>
+                            <?= renderSortHeader('Credit Limit', 'credit', $current_sort, $current_order); ?>
+                            <?= renderSortHeader('Created At', 'date', $current_sort, $current_order); ?>
+                            <th>Actions</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($customers as $c): ?>
+                            <tr data-bs-toggle="collapse" data-bs-target="#customer-detail-<?= $c['id'] ?>" style="cursor: pointer;">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-chevron-right text-muted me-2 text-primary" id="icon-<?= $c['id'] ?>"></i>
+                                        <div>
+                                            <div class="fw-bold text-primary"><?= htmlspecialchars($c['name']) ?></div>
+                                            <small class="text-muted">ID: #<?= $c['id'] ?></small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div><i class="bi bi-envelope me-1"></i><?= htmlspecialchars($c['email']) ?></div>
+                                    <div><i class="bi bi-telephone me-1"></i><?= htmlspecialchars($c['phone']) ?></div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-<?= $c['customer_level'] == 'vip' ? 'warning' : 'secondary' ?>">
+                                        <?= strtoupper($c['customer_level']) ?>
+                                    </span>
+                                </td>
+                                <td>$<?= number_format($c['credit_limit'], 2) ?></td>
+                                <td><?= date('Y-m-d', strtotime($c['created_at'])) ?></td>
+                                <td>
+                                    <a href="?route=customer_edit&id=<?= $c['id'] ?>" class="btn btn-sm btn-outline-info">Edit</a>
+                                    <form action="?route=customer_delete" method="POST" style="display:inline;">
+                                        <input type="hidden" name="delete_id" value="<?= $c['id'] ?>">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this customer?');">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr class="bg-light">
+                                <td colspan="6" class="p-0 border-0">
+                                    <div class="collapse" id="customer-detail-<?= $c['id'] ?>">
+                                        <div class="p-3 text-wrap">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <div class="card card-body border-0 shadow-sm">
+                                                        <h6 class="text-secondary mb-2">
+                                                            <i class="bi bi-geo-alt me-2 text-danger"></i>Company Address
+                                                        </h6>
+                                                        <p class="mb-0 text-muted" style="line-height: 1.5;">
+                                                            <?= !empty($c['address']) ? htmlspecialchars($c['address']) : 'No address provided.' ?>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
             <?= renderPagination($total_pages, $current_page) ?>
 
             <div class="text-muted small">
