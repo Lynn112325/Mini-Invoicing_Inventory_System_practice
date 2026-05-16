@@ -94,6 +94,16 @@ switch ($route) {
         $controller->delete();
         break;
 
+    // Supplier routes
+    case 'supplier_list':
+        $controller = new SupplierController($pdo);
+        $controller->index();
+        break;
+    case 'supplier_delete':
+        $controller = new SupplierController($pdo);
+        $controller->delete();
+        break;
+
     default:
         http_response_code(404);
         echo "404 Not Found";
