@@ -11,35 +11,52 @@ abstract class BasePartner
     }
 
     /**
-     * Get paginated list of partners with joined child data and dynamic filters
-     * Child controllers will call this method, passing in their specific SQL parts and filter configs.
+     * Get a paginated and filtered list of partners with associated child table data.
+     * 
+     * @param array $filters           Raw filter inputs from the request
+     * @param string $search           The global search keyword
+     * @param array $paginationParams  Pagination and sorting configuration (page, sort, order)
+     * @param array $extraSearchColumns Additional child table columns to include in global search
+     * @param array $extraFiltersConfig Specific filtering rules defined by the child model
+     * @param array $allowedSort       Key-value mapping of valid sort keys and their SQL columns
+     * @return array                   Paginated data, totals, and current state for the view
      */
-    protected function getPaginatedPartners($selectSql, $fromWhereSql, $filters, $search, $paginationParams, $extraSearchColumns = [], $extraFiltersConfig = [], $allowedSort = [])
+    protected function getPaginatedPartners($filters, $search, $paginationParams, $extraSearchColumns = [], $extraFiltersConfig = [], $allowedSort = [])
     {
+        // 1. Automatically build SELECT clause based on child fields
+        $childSelects = empty($this->childFields) ? '' : ', c.' . implode(', c.', $this->childFields);
+        $selectSql = "SELECT p.*" . $childSelects;
+
+        // 2. Automatically build FROM clause with INNER JOIN
+        $fromWhereSql = "FROM partners p INNER JOIN {$this->table} c ON p.id = c.partner_id";
+
+        // 3. Initialize default query conditions and parameters
         $conditions = ["p.deleted_at IS NULL"];
-
-        $filtersConfig = [];
-
-        // Merge with child-specific filters defined in the controller
-        $filtersConfig = array_merge($filtersConfig, $extraFiltersConfig);
         $params = [];
-        foreach ($filtersConfig as $key => $val) {
+
+        // 4. Process dynamic filters defined by the child model
+        foreach ($extraFiltersConfig as $key => $val) {
             if (isset($filters[$key]) && $filters[$key] !== '') {
                 $op = $val['op'] ?? '=';
                 $paramName = "filter_" . $key;
                 $conditions[] = "{$val['col']} {$op} :{$paramName}";
+
+                // Cast parameter value based on its strict data type
                 if ($val['type'] === 'int') $params[$paramName] = (int)$filters[$key];
                 elseif ($val['type'] === 'float') $params[$paramName] = (float)$filters[$key];
                 else $params[$paramName] = $filters[$key];
             }
         }
 
+        // 5. Combine the base query with all dynamic WHERE clauses
         $fullFromWhere = $fromWhereSql . " WHERE " . implode(" AND ", $conditions);
 
-        $searchConfig = array_merge(['p.name', 'p.email', 'p.phone', 'p.address'], $extraSearchColumns); // Allow searching by partner and child fields
+        // 6. Set up columns available for the global search keyword
+        $searchConfig = array_merge(['p.name', 'p.email', 'p.phone', 'p.address'], $extraSearchColumns);
 
+        // 7. Delegate executing and tokenizing pagination data to the helper
         require_once '../config/functions/pagination_helper.php';
-        return getPaginatedData($this->db, $selectSql, $fullFromWhere, $searchConfig, $allowedSort,  $paginationParams, $search, $params);
+        return getPaginatedData($this->db, $selectSql, $fullFromWhere, $searchConfig, $allowedSort, $paginationParams, $search, $params);
     }
 
     /**

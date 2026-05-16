@@ -18,12 +18,9 @@ class Customer extends BasePartner
             'credit_max' => ['col' => 'c.credit_limit',   'op' => '<=', 'type' => 'float'],
         ];
 
-        $selectSql = "SELECT p.*, c.credit_limit, c.customer_level";
-        $fromWhereSql = "FROM partners p INNER JOIN customers c ON p.id = c.partner_id";
-
         $allowedSort = $this->sortMapping;
 
-        return $this->getPaginatedPartners($selectSql, $fromWhereSql, $filters, $search, $paginationParams, [], $extraFiltersConfig, $allowedSort);
+        return $this->getPaginatedPartners($filters, $search, $paginationParams, [], $extraFiltersConfig, $allowedSort);
     }
 
     public function create($data)
