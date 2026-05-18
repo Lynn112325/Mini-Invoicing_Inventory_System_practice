@@ -66,13 +66,13 @@
                             <?= renderSortHeader('Customer Level', 'level', $current_sort, $current_order); ?>
                             <?= renderSortHeader('Credit Limit', 'credit', $current_sort, $current_order); ?>
                             <?= renderSortHeader('Created At', 'date', $current_sort, $current_order); ?>
-                            <th>Actions</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($customers as $c): ?>
-                            <tr data-bs-toggle="collapse" data-bs-target="#customer-detail-<?= $c['id'] ?>" style="cursor: pointer;">
-                                <td>
+                            <tr>
+                                <td data-bs-toggle="collapse" data-bs-target="#customer-detail-<?= $c['id'] ?>" style="cursor: pointer;">
                                     <div class="d-flex align-items-center">
                                         <i class="bi bi-chevron-right text-muted me-2 text-primary" id="icon-<?= $c['id'] ?>"></i>
                                         <div>
@@ -92,12 +92,29 @@
                                 </td>
                                 <td>$<?= number_format($c['credit_limit'], 2) ?></td>
                                 <td><?= date('Y-m-d', strtotime($c['created_at'])) ?></td>
+                                <!-- Actions btns -->
                                 <td>
-                                    <a href="?route=customer_edit&id=<?= $c['id'] ?>" class="btn btn-sm btn-outline-info">Edit</a>
-                                    <form action="?route=customer_delete" method="POST" style="display:inline;">
-                                        <input type="hidden" name="delete_id" value="<?= $c['id'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this customer?');">Delete</button>
-                                    </form>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Actions
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                            <li>
+                                                <a class="dropdown-item" href="?route=customer_edit&id=<?= $c['id'] ?>">
+                                                    <i class="bi bi-pencil me-1"></i> Edit
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <form action="?route=customer_delete" method="POST" class="m-0 p-0">
+                                                    <input type="hidden" name="delete_id" value="<?= $c['id'] ?>">
+                                                    <button type="submit" class="dropdown-item text-danger"
+                                                        onclick="return confirm('Are you sure you want to delete this customer?');">
+                                                        <i class="bi bi-trash me-1"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </td>
                             </tr>
                             <tr class="bg-light">

@@ -80,7 +80,7 @@
                         <?= renderSortHeader('Category', 'category_name', $current_sort, $current_order); ?>
                         <?= renderSortHeader('Stock', 'stock_quantity', $current_sort, $current_order); ?>
                         <?= renderSortHeader('Unit Price', 'unit_price', $current_sort, $current_order); ?>
-                        <th>Actions</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -92,14 +92,29 @@
                                 <td><?= $product['category_name'] ?? 'N/A' ?></td>
                                 <td><?= $product['stock_quantity'] ?></td>
                                 <td>$<?= number_format($product['unit_price'], 2) ?></td>
+                                <!-- Actions btns -->
                                 <td>
-                                    <a href="?route=product_edit&id=<?= $product['id'] ?>" class="btn btn-sm btn-outline-info">Edit</a>
-
-                                    <form action="?route=product_delete" method="POST" style="display:inline;"
-                                        onsubmit="return confirm('Are you sure you want to delete this product?');">
-                                        <input type="hidden" name="delete_id" value="<?= $product['id'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                                    </form>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Actions
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                            <li>
+                                                <a class="dropdown-item" href="?route=product_edit&id=<?= $product['id'] ?>">
+                                                    <i class="bi bi-pencil me-1"></i> Edit
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <form action="?route=product_delete" method="POST" class="m-0 p-0">
+                                                    <input type="hidden" name="delete_id" value="<?= $product['id'] ?>">
+                                                    <button type="submit" class="dropdown-item text-danger"
+                                                        onclick="return confirm('Are you sure you want to delete this product?');">
+                                                        <i class="bi bi-trash me-1"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
