@@ -4,22 +4,20 @@ class Supplier extends BasePartner
     protected $table = 'suppliers';
     protected $childFields = ['tax_id', 'payment_terms', 'bank_account'];
 
-    protected $sortMapping = [
-        'name'          => 'p.name',
-        'tax_id'        => 'c.tax_id',
-        'payment_terms' => 'c.payment_terms',
-        'bank_account'  => 'c.bank_account',
-        'date'          => 'p.created_at'
-    ];
-
     public function getPaginated($search, $filters, $paginationParams)
     {
         // Extra filters specific to suppliers
-        $extraFiltersConfig = [
+        static $extraFiltersConfig = [
             'terms' => ['col' => 'c.payment_terms', 'type' => 'string'],
         ];
 
-        $allowedSort = $this->sortMapping;
+        static $allowedSort = [
+            'name'          => 'p.name',
+            'tax_id'        => 'c.tax_id',
+            'payment_terms' => 'c.payment_terms',
+            'bank_account'  => 'c.bank_account',
+            'date'          => 'p.created_at'
+        ];
 
         return $this->getPaginatedPartners($filters, $search, $paginationParams, [], $extraFiltersConfig, $allowedSort);
     }

@@ -3,22 +3,21 @@ class Customer extends BasePartner
 {
     protected $table = 'customers';
     protected $childFields = ['credit_limit', 'customer_level'];
-    protected $sortMapping = [
-        'name'   => 'p.name',
-        'level'  => 'c.customer_level',
-        'credit' => 'c.credit_limit',
-        'date'   => 'p.created_at'
-    ];
 
     public function getPaginated($search, $filters, $paginationParams)
     {
-        $extraFiltersConfig = [
+        static $extraFiltersConfig = [
             'customer_level' => ['col' => 'c.customer_level', 'type' => 'string'],
             'credit_min' => ['col' => 'c.credit_limit',   'op' => '>=', 'type' => 'float'],
             'credit_max' => ['col' => 'c.credit_limit',   'op' => '<=', 'type' => 'float'],
         ];
 
-        $allowedSort = $this->sortMapping;
+        static $allowedSort = [
+            'name'   => 'p.name',
+            'level'  => 'c.customer_level',
+            'credit' => 'c.credit_limit',
+            'date'   => 'p.created_at'
+        ];
 
         return $this->getPaginatedPartners($filters, $search, $paginationParams, [], $extraFiltersConfig, $allowedSort);
     }
