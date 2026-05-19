@@ -32,7 +32,7 @@
                             <option value="">All Levels</option>
                             <option value="normal" <?= ($_GET['level'] ?? '') == 'normal' ? 'selected' : '' ?>>Normal</option>
                             <option value="vip" <?= ($_GET['level'] ?? '') == 'vip' ? 'selected' : '' ?>>VIP</option>
-                            <option value="vvep" <?= ($_GET['level'] ?? '') == 'vvep' ? 'selected' : '' ?>>VVEP</option>
+                            <option value="vvip" <?= ($_GET['level'] ?? '') == 'vvip' ? 'selected' : '' ?>>VVIP</option>
                         </select>
                     </div>
                     <div class="col-md-6">
