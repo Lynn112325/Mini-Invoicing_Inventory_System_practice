@@ -160,4 +160,27 @@ abstract class BasePartner
         $sql = "UPDATE partners SET {$newRoleColumn} = 1 WHERE id = :id";
         return $this->db->prepare($sql)->execute(['id' => $id]);
     }
+
+    /**
+     * Get all allowed values for an enum column.
+     * 
+     * @param string $column Name of the enum column.
+     * @return array List of enum values.
+     */
+    public function getEnumValues($column)
+    {
+        $cleanColumn = preg_replace('/[^a-zA-Z0-9_]/', '', $column);
+
+        $sql = "SHOW COLUMNS FROM {$this->table} LIKE '{$cleanColumn}'";
+        $stmt = $this->db->query($sql);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return [];
+        }
+
+        preg_match_all("/'([^']+)'/", $row['Type'], $matches);
+
+        return $matches[1] ?? [];
+    }
 }

@@ -61,4 +61,9 @@ class Customer extends BasePartner
     {
         $this->delete($id);
     }
+
+    public function getCustomerLevels()
+    {
+        return $this->getEnumValues('customer_level');
+    }
 }
