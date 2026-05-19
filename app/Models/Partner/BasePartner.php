@@ -4,6 +4,7 @@ abstract class BasePartner
     protected $db;
     protected $table;      // Defined in child (e.g., 'customers')
     protected $childFields = []; // Defined in child (e.g., ['credit_limit', 'customer_level'])
+    protected $roleColumn;   // Defined in child (e.g., 'is_customer' or 'is_supplier')
 
     public function __construct(PDO $db)
     {
@@ -31,7 +32,10 @@ abstract class BasePartner
         $fromWhereSql = "FROM partners p INNER JOIN {$this->table} c ON p.id = c.partner_id";
 
         // 3. Initialize default query conditions and parameters
-        $conditions = ["p.deleted_at IS NULL"];
+        $conditions = [
+            "p.deleted_at IS NULL",
+            "p.{$this->roleColumn} = 1"
+        ];
         $params = [];
 
         // 4. Process dynamic filters defined by the child model
@@ -94,8 +98,7 @@ abstract class BasePartner
                 name = :name, 
                 email = :email, 
                 phone = :phone, 
-                address = :address,
-                type = :type
+                address = :address
                 WHERE id = :id";
 
         return $this->db->prepare($sql)->execute([
@@ -103,8 +106,7 @@ abstract class BasePartner
             'name'    => $data['name'],
             'email'   => $data['email'],
             'phone'   => $data['phone'],
-            'address' => $data['address'],
-            'type'    => $data['type']
+            'address' => $data['address']
         ]);
     }
 
@@ -124,5 +126,38 @@ abstract class BasePartner
             error_log("Partner Transaction Failed: " . $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Create a brand new partner record.
+     * 
+     * This handles the initial creation where a partner starts with a single role 
+     * (e.g., just a customer OR just a supplier). The specified role column will 
+     * be set to 1, while other role flags default to 0.
+     */
+    protected function createBasePartner($data, $roleColumn)
+    {
+        $stmt = $this->db->prepare("INSERT INTO partners (name, email, phone, address, {$roleColumn}) 
+                                    VALUES (?, ?, ?, ?, 1)");
+        $stmt->execute([
+            $data['name'],
+            $data['email'],
+            $data['phone'],
+            $data['address']
+        ]);
+
+        return $this->db->lastInsertId();
+    }
+
+    /**
+     * Activate an additional role for an existing partner.
+     * 
+     * @param int $id 
+     * @param string $newRoleColumn 
+     */
+    protected function enableNewRole($id, $newRoleColumn)
+    {
+        $sql = "UPDATE partners SET {$newRoleColumn} = 1 WHERE id = :id";
+        return $this->db->prepare($sql)->execute(['id' => $id]);
     }
 }

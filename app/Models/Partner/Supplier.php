@@ -3,6 +3,7 @@ class Supplier extends BasePartner
 {
     protected $table = 'suppliers';
     protected $childFields = ['tax_id', 'payment_terms', 'bank_account'];
+    protected $roleColumn = 'is_supplier';
 
     public function getPaginated($search, $filters, $paginationParams)
     {
@@ -22,20 +23,22 @@ class Supplier extends BasePartner
         return $this->getPaginatedPartners($filters, $search, $paginationParams, [], $extraFiltersConfig, $allowedSort);
     }
 
-
-    public function create($data)
+    public function create($data, $existingPartnerId = null)
     {
-        return $this->executeTransaction(function () use ($data) {
+        return $this->executeTransaction(function () use ($data, $existingPartnerId) {
+
             // 1. Insert into Partners
-            $stmt = $this->db->prepare("INSERT INTO partners (name, email, phone, address, type) 
-                                        VALUES (?, ?, ?, ?, 'supplier')");
-            $stmt->execute([$data['name'], $data['email'], $data['phone'], $data['address']]);
-            $partnerId = $this->db->lastInsertId();
+            if ($existingPartnerId) {
+                $partnerId = $existingPartnerId;
+                $this->enableNewRole($partnerId, $this->roleColumn);
+            } else {
+                $partnerId = $this->createBasePartner($data, $this->roleColumn);
+            }
 
             // 2. Insert into Suppliers
-            $stmt = $this->db->prepare("INSERT INTO {$this->table} (partner_id, tax_id, payment_terms, bank_account) 
-                                        VALUES (?, ?, ?, ?)");
-            $stmt->execute([$partnerId, $data['tax_id'], $data['payment_terms'], $data['bank_account']]);
+            $stmt = $this->db->prepare("INSERT INTO suppliers (partner_id, tax_id, payment_terms) 
+                                        VALUES (?, ?, ?)");
+            $stmt->execute([$partnerId, $data['tax_id'], $data['payment_terms']]);
 
             return $partnerId;
         });

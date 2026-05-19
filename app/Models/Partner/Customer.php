@@ -3,6 +3,7 @@ class Customer extends BasePartner
 {
     protected $table = 'customers';
     protected $childFields = ['credit_limit', 'customer_level'];
+    protected $roleColumn = 'is_customer';
 
     public function getPaginated($search, $filters, $paginationParams)
     {
@@ -22,14 +23,16 @@ class Customer extends BasePartner
         return $this->getPaginatedPartners($filters, $search, $paginationParams, [], $extraFiltersConfig, $allowedSort);
     }
 
-    public function create($data)
+    public function create($data, $existingPartnerId = null)
     {
-        return $this->executeTransaction(function () use ($data) {
+        return $this->executeTransaction(function () use ($data, $existingPartnerId) {
             // 1. Insert into Partners
-            $stmt = $this->db->prepare("INSERT INTO partners (name, email, phone, address, type) 
-                                        VALUES (?, ?, ?, ?, 'customer')");
-            $stmt->execute([$data['name'], $data['email'], $data['phone'], $data['address']]);
-            $partnerId = $this->db->lastInsertId();
+            if ($existingPartnerId) {
+                $partnerId = $existingPartnerId;
+                $this->enableNewRole($partnerId, $this->roleColumn);
+            } else {
+                $partnerId = $this->createBasePartner($data, $this->roleColumn);
+            }
 
             // 2. Insert into Customers
             $stmt = $this->db->prepare("INSERT INTO customers (partner_id, credit_limit, customer_level) 
