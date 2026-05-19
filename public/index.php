@@ -94,7 +94,15 @@ switch ($route) {
         $controller->delete();
         break;
 
-    // Supplier routes
+    case 'customer_add':
+        $controller = new CustomerController($pdo);
+        if ($method === 'POST') {
+            $controller->store();
+        } else {
+            $controller->create();
+        }
+
+        // Supplier routes
     case 'supplier_list':
         $controller = new SupplierController($pdo);
         $controller->index();
