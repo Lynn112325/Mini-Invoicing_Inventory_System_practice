@@ -24,7 +24,7 @@
                         <div class="text-end mt-3">
                             <button type="reset" class="btn btn-light">Reset</button>
                             <button type="submit" class="btn btn-primary px-4">
-                                <?= isset($is_edit) ? 'Add Customer' : 'Update Customer' ?>
+                                <?= isset($is_edit) && $is_edit ? 'Update Customer' : 'Save Customer' ?>
                             </button>
                         </div>
                     </form>

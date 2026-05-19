@@ -69,7 +69,7 @@ function displayError($field, $errors)
     <div class="text-end mt-3">
         <button type="reset" class="btn btn-light">Reset</button>
         <button type="submit" class="btn btn-primary px-4">
-            <?= isset($is_edit) ? 'Update Product' : 'Save Product' ?>
+            <?= isset($is_edit) && $is_edit ? 'Update Product' : 'Save Product' ?>
         </button>
     </div>
 </form>
