@@ -1,3 +1,15 @@
+<?php
+
+/** 
+ * @var array $customers
+ * @var string $searchTerm
+ * @var string $current_sort
+ * @var string $current_order
+ * @var int $total_pages
+ * @var int $current_page
+ * @var int $total_results
+ */
+?>
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Customer Management</h2>
@@ -144,7 +156,7 @@
             <?= renderPagination($total_pages, $current_page) ?>
 
             <div class="text-muted small">
-                Showing <?= count($customers) ?> of <?= $result['total_results'] ?> customers
+                Showing <?= count($customers) ?> of <?= $total_results ?> customers
             </div>
         </div>
     </div>

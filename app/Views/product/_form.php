@@ -1,5 +1,13 @@
 <!-- Product Form Fields -->
 <?php
+/** 
+ * @var array $product -product data
+ * @var array $categories
+ * @var array $errors
+ * @var string $formAction
+ */
+?>
+<?php
 function setErrorClass($field, $errors)
 {
     return isset($errors[$field]) ? 'is-invalid' : '';

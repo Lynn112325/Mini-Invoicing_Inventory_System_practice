@@ -1,3 +1,15 @@
+<?php
+
+/** 
+ * @var array $suppliers
+ * @var string $searchTerm
+ * @var string $current_sort
+ * @var string $current_order
+ * @var int $total_pages
+ * @var int $current_page
+ * @var int $total_results
+ */
+?>
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Supplier Management</h2>
@@ -41,14 +53,6 @@
     <!-- Data Table -->
     <div class="card shadow-sm">
         <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <div>
-                    <strong>Total Suppliers:</strong> <?= $result['total_results'] ?>
-                </div>
-                <div>
-                    <a href="?route=supplier_list&export=csv" class="btn btn-sm btn-outline-success">Export CSV</a>
-                </div>
-            </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
@@ -147,7 +151,7 @@
             <?= renderPagination($total_pages, $current_page) ?>
 
             <div class="text-muted small">
-                Showing <?= count($suppliers) ?> of <?= $result['total_results'] ?> suppliers
+                Showing <?= count($suppliers) ?> of <?= $total_results ?> suppliers
             </div>
         </div>
     </div>
