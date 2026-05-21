@@ -42,7 +42,14 @@ class Product
         $fromWhereSql = "FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE " . implode(" AND ", $conditions);
         $selectSql = "SELECT p.*, c.name as category_name";
         $searchColumns = ['p.name', 'p.sku'];
-        $allowedSort = ['sku', 'name', 'category_name', 'stock_quantity', 'unit_price', 'p.id'];
+        $allowedSort = [
+            'sku'            => 'p.sku',
+            'name'           => 'p.name',
+            'category_name'  => 'c.name',
+            'stock_quantity' => 'p.stock_quantity',
+            'unit_price'     => 'p.unit_price',
+            'id'             => 'p.id'
+        ];
 
         require_once '../config/functions/pagination_helper.php';
         return getPaginatedData($this->db, $selectSql, $fromWhereSql, $searchColumns, $allowedSort, $paginationParams, $searchTerm, $params);
